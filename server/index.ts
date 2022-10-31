@@ -91,6 +91,10 @@ const database = new postgres.Client({
   password: Deno.env.get("PG_PASSWORD"),
 });
 
+if (database.connected) {
+  Deno.exit(1);
+}
+
 interface DbPoint {
   uuid: string;
   number: number;
@@ -122,9 +126,7 @@ async function getAllPoints(): Promise<Array<Point>> {
   return await database
     .queryObject<DbPoint>`SELECT * FROM points;`
     .then((result) => result.rows)
-    .then((points) => points.map(toPoint))
-    .catch(e => { console.log(e); return Promise.reject(e);})
-
+    .then((points) => points.map(toPoint));
 }
 
 async function insertPoint(point: Point): Promise<void> {
