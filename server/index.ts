@@ -157,6 +157,7 @@ router
     ctx.response.body = ctx.params.uuid;
   })
   .get("/point", async (ctx) => {
+    console.log('get all points')
     ctx.response.body = await getAllPoints();
   })
   .post("/point/register", async (ctx) => {
