@@ -6,7 +6,10 @@ const app = new Application();
 const router = new Router();
 
 router
-  .get('/', ctx => ctx.response.body = 'Hello chasers');
+  .get('/', ctx => ctx.response.body = 'Hello chasers')
+  .get('/point/:uuid', ctx => {
+    ctx.response.body = ctx.params.uuid;
+  })
 
 app.use(router.routes());
 
