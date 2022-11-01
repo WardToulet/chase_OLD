@@ -73,6 +73,73 @@ function registerPointView(params: { uuid: string }): string {
     </html>`;
 }
 
+function caputrePoint(params: { uuid: string }): string {
+  return `<!DOCTYPE html>
+    <html lang="en">
+      <head>
+        <title>Register Point</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <link rel="stylesheet" href="https://unpkg.com/open-props"/>
+        <link rel="stylesheet" href="https://unpkg.com/open-props/normalize.min.css"/>
+        <link rel="stylesheet" href="https://unpkg.com/open-props/buttons.min.css"/>
+      </head>
+
+      <body>
+        <form action="/point/register" method="POST">
+          <fieldset>
+            <legend>Point</legend>
+
+            <p>
+              <label for="uuid">uuid</label>
+              <input id="uuid" type="text" name="uuid" value="${params.uuid}" readonly required tabindex="-1"/>
+            </p>
+
+            <p>
+              <label for="number">number</label>
+              <input id="number" type="number" name="number" required tabindex="1"/>
+            </p>
+          </fieldset>
+
+          <fieldset>
+            <legend>Coordinate</legend>
+
+            <label for="latitude">latitude</label>
+            <input id="latitude" type="number" name="latitude" readonly required tabindex="-1"/>
+
+            <label for="longitude">longitude</label>
+            <input id="longitude" type="number" name="longitude" readonly required tabindex="-1"/>
+          </fieldset>
+
+          <input type="submit" value="Registeer punt" tabindex="1"/>
+        </form>
+
+        <style>
+          html {
+            padding: var(--size-fluid-2);
+          }
+
+          form {
+            display: grid;
+            gap: var(--size-2);
+          }
+        </style>
+
+        <script >
+          const longitude = document.getElementById('longitude');
+          const latitude = document.getElementById('latitude');
+
+          navigator.geolocation.watchPosition((geolocation) => {
+            latitude.value = geolocation.coords.latitude;
+            longitude.value = geolocation.coords.longitude;
+          });
+        </script>
+      </body>
+    </html>`;
+}
+
+
 interface Point {
   uuid: string;
   number: number;
@@ -157,7 +224,6 @@ router
     ctx.response.body = ctx.params.uuid;
   })
   .get("/point", async (ctx) => {
-    console.log('get all points')
     ctx.response.body = await getAllPoints();
   })
   .post("/point/register", async (ctx) => {
